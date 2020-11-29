@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="icon" href="{{ url_for('static', filename = 'favicon.ico') }}">
+  <title>CV Streaming</title>
+
+  <script type="text/javascript"
+          src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js">
+  </script>
+
+</head>
+    <body >
+        <table style="width:100%">
+            <tr>
+                <td>
+                    <div style="width: 70%">
+                        <img id="streaming-image" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text"></p>
+                    </div>
+                </td>
+                <td>
+                    <div style="width: 70%">
+                        <img id="streaming-image-1" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-1"></p>
+                    </div>
+                </td>
+            </tr>           
+        </table>
+
+    </body>
+</html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    const image = document.getElementById("streaming-image");
+    const text = document.getElementById("streaming-text");
+
+    const image_1 = document.getElementById("streaming-image-1");
+    const text_1 = document.getElementById("streaming-text-1");
+
+
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/ui', {
+      reconnection: false
+    });
+
+    socket.on('connect', () => {
+      console.log('Connected');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected');
+    });
+
+    socket.on('connect_error', (error) => {
+      console.log('Connect error! ' + error);
+    });
+
+    socket.on('connect_timeout', (error) => {
+      console.log('Connect timeout! ' + error);
+    });
+
+    socket.on('error', (error) => {
+      console.log('Error! ' + error);
+    });
+
+    socket.on('server2ui', (msg) => {
+        if (typeof msg.pos === 'undefined') {
+            // No position defined -> use default
+            image.src = msg.image;
+            text.innerHTML = msg.text;            
+        } else {
+            switch(msg.pos) {
+                case 1:
+                    image_1.src = msg.image;
+                    text_1.innerHTML = msg.text;
+                    break;
+                default:
+                    image.src = msg.image;
+                    text.innerHTML = msg.text;
+            }
+            console.log('Position: ' + msg.pos);    
+        }
+
+    });
+  });
+</script>
