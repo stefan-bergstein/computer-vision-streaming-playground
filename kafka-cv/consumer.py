@@ -95,6 +95,8 @@ if __name__ == "__main__":
     print("BOOTSTRAP_SERVER:" + bootstrap_servers)
     print("TOPIC:" + topic)
 
+    push_bad = False
+
     for msg in consumer:
         d = json.loads(msg.value)
 
@@ -111,16 +113,37 @@ if __name__ == "__main__":
         
         postion = 0
         
+        
         if 'label' in d:
         
             if d['label'] == "good":
                 postion = 0
+                color = (0, 255, 0 ) # #BGR
             else:
                 postion = 1
-  
+                color = (0, 0, 255 ) # #BGR
+
+        
             font = cv2.FONT_HERSHEY_SIMPLEX
-            color = (255, 0, 0 ) # #BGR
             stroke = 1
             cv2.putText(frame, d['label'], (10, 240), font, 0.5, color, stroke, cv2.LINE_AA)
 
-        send_data(frame, d['time'], postion)
+            send_data(frame, d['time'], postion)
+
+'''
+            if push_bad:
+                send_data(last_bad_frame, last_bad_time, 1)
+                push_bad = False
+
+            if d['label'] == "good":
+                pass
+            else:
+                last_bad_frame = frame
+                last_bad_time = d['time']
+                push_bad = True
+'''
+
+#             send_data(frame, d['time'], postion)
+
+
+

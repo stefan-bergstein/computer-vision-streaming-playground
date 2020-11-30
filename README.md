@@ -24,12 +24,54 @@ What is in the playground?
   - Read images from the local camera or from files
   - Write images to a kafka topic
 
-## Try it ....
+## Try it locally ...
 
 ### Use case 1 - Stream web cam to web page
-todo - describe
+**Start the web-ui backend:**
+```
+cd web-ui
+python app.py
+```
+
+**Open Browser**
+
+http://localhost:8088/ 
+
+**Stream your webcam**
+```
+cd cam
+python cam.py 
+```
+
 
 ### Use case 2 - Stream image via kafka and classify images 
-todo - describe
+
+**Start a local Kafka server**
+
+See [ Start the Kafka server](
+https://kafka.apache.org/25/documentation/streams/quickstart#quickstart_streams_startserver)
+
+**Start the web-ui backend:**
+```
+cd web-ui
+python app.py
+```
+
+**Open Browser**
+
+http://localhost:8088/ 
 
 
+**Start the kafka receiver:**
+```
+cd kafka-cv
+python consumer.py
+```
+
+**Stream images**
+```
+cd cam
+python camk.py --images --fps 2
+```
+
+Note, in case you stream large images via Kafka, please ensure proper [Kafka configurations.](https://stackoverflow.com/questions/51767879/not-able-to-send-large-messages-to-kafka)

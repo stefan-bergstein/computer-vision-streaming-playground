@@ -102,7 +102,8 @@ def cam_to_kafka(camera, fps, image_list):
 
                 msg['time'] = str(datetime.datetime.now())
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                msg['frame'] = gray.tolist()
+                msg['frame'] = frame.tolist()
+                #msg['frame'] = gray.tolist()
                 j=json.dumps(msg)
                 print(len(j))
 
@@ -110,8 +111,10 @@ def cam_to_kafka(camera, fps, image_list):
                 print("Message sent: " +topic + " - " + msg['time'] + " - " + str(gray.shape))
                 last_update_time =  cur_time
             else:
-                pass
-                #time.sleep(0.02)
+                if not image_list:
+                    pass
+                else:
+                    time.sleep(wait_time)
 
 
     except Exception as e: 
@@ -135,7 +138,6 @@ if __name__ == '__main__':
     parser.add_argument(
             '--fps',  type=float, default=10.0,
             help='Frames per second')
-
 
     parser.add_argument(
             '--images',  action="store_true",
