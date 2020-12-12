@@ -38,7 +38,7 @@ def find_images(path):
 
 
 
-def cam_to_kafka(camera, fps, image_list):
+def cam_to_kafka(camera, fps, image_list, scale):
     """
     Send cam video stream to specified Kafka topic.
     """
@@ -77,8 +77,10 @@ def cam_to_kafka(camera, fps, image_list):
             if not image_list:
                 # Read frame from camera
                 success, frame = cap.read()
-                frameWidth = 320
-                frameHeight = 240
+                frameWidth = int(320 * scale)
+                frameHeight = int(240 * scale)
+                #frameWidth = 160
+                #frameHeight = 120
                 
             else:
                 # Read image from disk
@@ -128,7 +130,7 @@ def cam_to_kafka(camera, fps, image_list):
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser(description='Cam Streamer')
+    parser = argparse.ArgumentParser(description='Kafka Cam Streamer')
     parser.add_argument(
             '--camera', type=int, default='0',
             help='Camera index')
@@ -138,6 +140,11 @@ if __name__ == '__main__':
     parser.add_argument(
             '--fps',  type=float, default=10.0,
             help='Frames per second')
+
+    parser.add_argument(
+            '--scale',  type=float, default=1.0,
+            help='Scale cam. Default 1.0 = 320x240')
+
 
     parser.add_argument(
             '--images',  action="store_true",
@@ -166,5 +173,5 @@ if __name__ == '__main__':
 
 
 
-    cam_to_kafka(args.camera, args.fps, image_list)
+    cam_to_kafka(args.camera, args.fps, image_list, args.scale)
 
