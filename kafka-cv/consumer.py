@@ -129,21 +129,11 @@ if __name__ == "__main__":
             cv2.putText(frame, d['label'], (10, 240), font, 0.5, color, stroke, cv2.LINE_AA)
 
             send_data(frame, d['time'], postion)
+        else:
 
-'''
-            if push_bad:
-                send_data(last_bad_frame, last_bad_time, 1)
-                push_bad = False
+            send_data(frame, d['time'], 0)
 
-            if d['label'] == "good":
-                pass
-            else:
-                last_bad_frame = frame
-                last_bad_time = d['time']
-                push_bad = True
-'''
 
-#             send_data(frame, d['time'], postion)
 
 
 
