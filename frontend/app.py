@@ -2,7 +2,7 @@ from flask_socketio import SocketIO
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
-sio = SocketIO(app)
+sio = SocketIO(app, logger=True, engineio_logger=False)
 
 
 @app.route('/')
