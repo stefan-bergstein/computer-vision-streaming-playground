@@ -15,20 +15,20 @@ spec:
         app: cv-streaming
     spec:
       containers:
-      - name: frontend
-        image: frontend:latest
-        imagePullPolicy: Always
-        ports:
-          - containerPort: 8088
-      - name: kafka-cv
-        image: kafka-cv:latest
-        imagePullPolicy: Always
-        envFrom:
-        - configMapRef:
-            name: kafka-cv-conf
-        volumeMounts:
-        - mountPath: /mnt/kafka-ca-cert
-          name: kafka-ca-cert-volume
+        - name: frontend
+          image: frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8088
+        - name: kafka-cv
+          image: kafka-cv:latest
+          imagePullPolicy: Always
+          envFrom:
+          - configMapRef:
+              name: kafka-cv-conf
+          volumeMounts:
+            - mountPath: /mnt/kafka-ca-cert
+              name: kafka-ca-cert-volume
       volumes:
         - configMap:
             defaultMode: 420
