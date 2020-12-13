@@ -10,9 +10,7 @@ import numpy as np
 from PIL import Image
 from kafka import KafkaProducer
 from random import shuffle
-
-
-
+import base64
 
     
 def find_images(path):
@@ -36,6 +34,14 @@ def find_images(path):
     return image_list
 
 
+
+
+def convert_image_to_jpeg(image):
+    # Encode frame as jpeg
+    frame = cv2.imencode('.jpg', image)[1].tobytes()
+    # Encode frame in base64 representation and remove utf-8 encoding
+    frame = base64.b64encode(frame).decode('utf-8')
+    return "data:image/jpeg;base64,{}".format(frame)
 
 
 def cam_to_kafka(camera, fps, image_list, scale):
@@ -104,13 +110,12 @@ def cam_to_kafka(camera, fps, image_list, scale):
 
                 msg['time'] = str(datetime.datetime.now())
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                msg['frame'] = frame.tolist()
-                #msg['frame'] = gray.tolist()
-                j=json.dumps(msg)
-                print(len(j))
 
+
+                msg['frame'] = convert_image_to_jpeg(frame)
                 producer.send(topic, json.dumps(msg))
-                print("Message sent: " +topic + " - " + msg['time'] + " - " + str(gray.shape))
+
+                print("Message sent: " +topic + " - " + msg['time'] + " - " + str(frame.shape))
                 last_update_time =  cur_time
             else:
                 if not image_list:

@@ -11,7 +11,6 @@ import base64
 import time
 import socketio
 
-
 is_connected=False
 
 sio = socketio.Client()
@@ -60,9 +59,23 @@ def send_data(frame, text, position):
 def convert_image_to_jpeg(image):
     # Encode frame as jpeg
     frame = cv2.imencode('.jpg', image)[1].tobytes()
+
     # Encode frame in base64 representation and remove utf-8 encoding
     frame = base64.b64encode(frame).decode('utf-8')
     return "data:image/jpeg;base64,{}".format(frame)
+
+
+def convert_b64jpeg_to_image(b64jpeg):
+
+    # Decode base64 string in bytes
+    img_bytes = base64.b64decode(b64jpeg)
+  
+    # Convert in np array 
+    jpg_as_np = np.frombuffer(img_bytes, dtype=np.uint8)
+
+    # Decode into cv2 image
+    return cv2.imdecode(jpg_as_np, flags=1) 
+
 
 
 if __name__ == "__main__":
@@ -101,10 +114,11 @@ if __name__ == "__main__":
     push_bad = False
 
     for msg in consumer:
-        d = json.loads(msg.value)
+        data = json.loads(msg.value)
 
-        frame = np.array(d['frame'],dtype=np.uint8)
-        print(d['time'] + " " + str(frame.shape))
+        frame = convert_b64jpeg_to_image(data['frame'].split(',')[1])
+
+        print(data['time'] + " " + str(frame.shape))
 
         if not is_connected:
             connect_server(ui_server)
@@ -117,9 +131,9 @@ if __name__ == "__main__":
         postion = 0
         
         
-        if 'label' in d:
+        if 'label' in data:
         
-            if d['label'] == "good":
+            if data['label'] == "good":
                 postion = 0
                 color = (0, 255, 0 ) # #BGR
             else:
@@ -129,12 +143,12 @@ if __name__ == "__main__":
         
             font = cv2.FONT_HERSHEY_SIMPLEX
             stroke = 1
-            cv2.putText(frame, d['label'], (10, 240), font, 0.5, color, stroke, cv2.LINE_AA)
+            cv2.putText(frame, data['label'], (10, 240), font, 0.5, color, stroke, cv2.LINE_AA)
 
-            send_data(frame, d['time'], postion)
+            send_data(frame, data['time'], postion)
         else:
 
-            send_data(frame, d['time'], 0)
+            send_data(frame, data['time'], 0)
 
 
 
