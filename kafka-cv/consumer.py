@@ -1,7 +1,7 @@
-#import datetime
+
 import os
 import sys
-#from flask import Flask, Response
+
 from kafka import KafkaConsumer
 import json
 import msgpack
@@ -102,7 +102,7 @@ if __name__ == "__main__":
 
     except Exception as e:
         sio.disconnect()
-        print(str(e))
+        print("KafkaConsumer: ", str(e))
         sys.exit('Could not connect to Kafka:' + bootstrap_servers)
 
 
