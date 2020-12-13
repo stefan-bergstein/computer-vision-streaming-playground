@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cv-streaming
+  labels:
+    app: cv-streaming
+spec:
+  selector:
+    matchLabels:
+      app: cv-streaming
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cv-streaming
+    spec:
+      containers:
+        - name: frontend
+          image: frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8088

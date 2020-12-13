@@ -1,0 +1,27 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: cv-streaming
+    component: frontend
+  name: frontend
+spec:
+  strategy:
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+    type: Docker
+  source:
+    contextDir: frontend
+    git:
+      uri: https://github.com/stefan-bergstein/computer-vision-streaming-playground.git
+    type: Git
+  output:
+    to:
+      kind: ImageStreamTag
+      name: frontend:latest
+  runPolicy: Serial
+  triggers:
+  - type: ConfigChange
+  successfulBuildsHistoryLimit: 3
+  postCommit: {}
+  resources: {}
