@@ -134,9 +134,10 @@ if __name__ == '__main__':
     parser.add_argument(
             '--camera', type=int, default='0',
             help='Camera index')
-    parser.add_argument(
-            '--server',  type=str, default='localhost:9092',
-            help='The IP address or hostname and port of the server (localhost:9092).')
+
+    #parser.add_argument(
+    #        '--server',  type=str, default='localhost:9092',
+    #        help='The IP address or hostname and port of the server (localhost:9092).')
     parser.add_argument(
             '--fps',  type=float, default=10.0,
             help='Frames per second')

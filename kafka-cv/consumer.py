@@ -82,13 +82,16 @@ if __name__ == "__main__":
         consumer = KafkaConsumer(topic, 
             value_deserializer=msgpack.unpackb,
             bootstrap_servers=[bootstrap_servers],
+            security_protocol=security_protocol,
             ssl_check_hostname=ssl_check_hostname,
             max_partition_fetch_bytes=5048576,
             ssl_cafile=ssl_cafile)
 
-    except:
+    except Exception as e:
         sio.disconnect()
+        print(str(e))
         sys.exit('Could not connect to Kafka:' + bootstrap_servers)
+
 
 
     print("Consume ...")
