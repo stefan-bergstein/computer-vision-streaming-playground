@@ -1,0 +1,11 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: cv-streaming
+spec:
+  to:
+    kind: Service
+    name: cv-streaming
+  port:
+    targetPort: 8088
+

@@ -26,11 +26,11 @@ spec:
           envFrom:
           - configMapRef:
               name: kafka-cv-conf
-          volumeMounts:
-            - mountPath: /mnt/kafka-ca-cert
-              name: kafka-ca-cert-volume
-      volumes:
-        - configMap:
-            defaultMode: 420
-            name: kafka-ca-cert
-          name: kafka-ca-cert-volume
+#          volumeMounts:
+#            - mountPath: /mnt/kafka-ca-cert
+#              name: kafka-ca-cert-volume
+#      volumes:
+#        - configMap:
+#            defaultMode: 420
+#            name: kafka-ca-cert
+#          name: kafka-ca-cert-volume
