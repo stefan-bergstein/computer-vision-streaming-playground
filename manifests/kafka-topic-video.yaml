@@ -1,0 +1,12 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  name: distributed-video1
+  labels:
+    strimzi.io/cluster: kafka-cluster
+spec:
+  topicName: distributed-video1
+  partitions: 1
+  replicas: 1
+  retention.ms: 60000
+  config: {}
