@@ -18,6 +18,9 @@ spec:
       offsets.topic.replication.factor: 3
       transaction.state.log.min.isr: 2
       transaction.state.log.replication.factor: 3
+      message.max.bytes: 536870912
+      replica.fetch.max.bytes: 536870912
+      replica.fetch.response.max.bytes: 536870912
     storage:
       type: ephemeral
   zookeeper:
