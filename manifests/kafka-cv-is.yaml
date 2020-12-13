@@ -1,0 +1,9 @@
+kind: ImageStream
+apiVersion: v1
+metadata:
+  name: kafka-cv
+  labels:
+    component: kafka-cv
+spec:
+  lookupPolicy:
+    local: true

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-cv-conf
+data:
+  BOOTSTRAP_SERVER: kafka-cluster-kafka-bootstrap-sbergste-opencv.apps.ocp4.stormshift.coe.muc.redhat.com:443
+  SECURITY_PROTOCOL: SSL
+  SSL_CAFILE: /mnt/kafka-ca-cert/kafka-ca.crt
+
