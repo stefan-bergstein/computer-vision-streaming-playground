@@ -160,18 +160,11 @@ pip install -r requirements.txt
 
 *Please let me know if any module is missing
 
-
-**Set env vars for Kafka SSL communication**
-```
-cd ../cam
-. ../envs/ocp-env.sh
-export SSL_CAFILE=../envs/ca.crt
-```
-
 **Stream your webcam via web-sockets**
 
-Open Browser: http://<cv-streaming-route>/
+Open Browser: `http://<cv-streaming-route>/`
 
+Start the webcam streamer:
 ```
 python cam.py --server <cv-streaming-route>:80 --fps 1
 ```
@@ -179,7 +172,17 @@ python cam.py --server <cv-streaming-route>:80 --fps 1
 
 **Stream your webcam via kafka**
 
-Open Browser: http://<cv-streaming-route>/
+
+Set env vars for Kafka and SSL communication
+```
+cd ../cam
+. ../envs/ocp-env.sh
+export SSL_CAFILE=../envs/ca.crt
+```
+
+Open Browser: `http://<cv-streaming-route>/`
+
+Start the webcam streamer:
 
 ```
 python camk.py --fps 1
