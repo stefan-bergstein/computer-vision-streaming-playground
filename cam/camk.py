@@ -52,6 +52,8 @@ def cam_to_kafka(camera, fps, image_list, scale):
     producer = KafkaProducer(value_serializer=msgpack.dumps,
         bootstrap_servers=bootstrap_servers,
         security_protocol=security_protocol,ssl_check_hostname=ssl_check_hostname,
+        batch_size=0,
+        linger_ms=10,
         max_request_size=5048576,
         ssl_cafile=ssl_cafile)
 
