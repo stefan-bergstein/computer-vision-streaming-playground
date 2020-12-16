@@ -116,7 +116,7 @@ if __name__ == "__main__":
     for msg in consumer:
         data = json.loads(msg.value)
 
-        frame = convert_b64jpeg_to_image(data['frame'].split(',')[1])
+        frame = convert_b64jpeg_to_image(data['image'].split(',')[1])
 
         print(data['time'] + " " + str(frame.shape))
 
