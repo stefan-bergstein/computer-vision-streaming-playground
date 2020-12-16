@@ -143,7 +143,11 @@ if __name__ == "__main__":
         
             font = cv2.FONT_HERSHEY_SIMPLEX
             stroke = 1
-            cv2.putText(frame, data['label'], (10, 240), font, 0.5, color, stroke, cv2.LINE_AA)
+
+            frameHeight, frameWidth = frame.shape[:2]
+
+
+            cv2.putText(frame, data['label'], (10, frameHeight - 10 ), font, 0.5, color, stroke, cv2.LINE_AA)
 
             send_data(frame, data['time'], postion)
         else:
