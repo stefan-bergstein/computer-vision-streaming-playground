@@ -2,9 +2,6 @@
 
 What is in the playground?
 
-
-## As of 13.12.2020
-
 ### frontend - A simple SocketIO Flask app 
 - Shows images in a very basic html page 
 - Listens to web-sockets for new images
@@ -16,17 +13,16 @@ What is in the playground?
 - Push images to the frontend
 
 ### cam - read images from a camera, screen or files
-- cam.py 
-  - Read images from the local camera or a part of your screen
-  - Optionally, try some face detection
-  - Send image via web-socket to frontend
-- camk.py
-  - Read images from the local camera or from files
+- client.py 
+  - Read images from the local camera, a part of your screen or from files
+  - Optionally, try some face detection 
+  - Send image via web-socket to frontend, or
   - Write images to a kafka topic
 
 ## Try it locally ...
 
 ### Use case 1 - Stream web cam to web page
+
 **Start the frontend backend:**
 ```
 cd frontend
@@ -40,7 +36,7 @@ http://localhost:8088/
 **Stream your webcam**
 ```
 cd cam
-python cam.py 
+python client.py --web
 ```
 
 
@@ -69,9 +65,14 @@ python consumer.py
 ```
 
 **Stream images**
+
+- Read images from `./data/`
+- 2 frames per second
+- Scale image by 0.5
+
 ```
 cd cam
-python camk.py --images --fps 2
+python client.py --images --fps 2 --scale 0.5
 ```
 
 Note, in case you stream large images via Kafka, please ensure proper [Kafka configurations.](https://stackoverflow.com/questions/51767879/not-able-to-send-large-messages-to-kafka)
@@ -166,26 +167,20 @@ Open Browser: `http://<cv-streaming-route>/`
 
 Start the webcam streamer:
 ```
-python cam.py --server <cv-streaming-route>:80 --fps 1
+python client.py --web --server <cv-streaming-route>:80 --fps 1
 ```
 
 
 **Stream your webcam via kafka**
-
-
-Set env vars for Kafka and SSL communication
-```
-cd ../cam
-. ../envs/ocp-env.sh
-export SSL_CAFILE=../envs/ca.crt
-```
 
 Open Browser: `http://<cv-streaming-route>/`
 
 Start the webcam streamer:
 
 ```
-python camk.py --fps 1
+python client.py -l INFO  --fps 1  --scale 1 --bootstrap <kafka-bootstrap:443> --ssl --cafile ../envs/ca.crt
 ```
 
+**Stream your screen, detect faces and send via kafka**
 
+python client.py -l INFO  --fps 1  --scale 0.5 --screen --faces --bootstrap  <kafka-bootstrap:443> --ssl --cafile ../envs/ca.crt

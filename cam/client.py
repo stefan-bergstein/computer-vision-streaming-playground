@@ -18,12 +18,12 @@ import base64
 import socketio
 import logging
 
+from find_faces import faces
 
 #
 # Globals
 #
 
-detect_faces = False
 
 # Logging
 module = sys.modules['__main__'].__file__
@@ -108,7 +108,7 @@ def scale_frame(frame, scale):
 # Capture local screen
 #
 
-def capture_screen(box, fps, scale):
+def capture_screen(box, fps, scale, detect_faces):
     logger.info("Capture local screen ...")
 
     # Area to capture from screen
@@ -122,6 +122,11 @@ def capture_screen(box, fps, scale):
 
     # Get sct
     sct = mss()
+
+    # Faces
+    if detect_faces:
+        logger.info("Detect Faces")
+        f = faces()
 
     last_update_time = time.time()
     wait_time = (1/fps)
@@ -144,6 +149,9 @@ def capture_screen(box, fps, scale):
             cur_time = time.time()
             if cur_time - last_update_time > wait_time:
 
+                # Faces
+                if detect_faces:
+                    frame = f.find(frame)
 
                 # Scale frame
                 frame = scale_frame(frame, scale)
@@ -240,7 +248,7 @@ def read_imagefiles(path, fps, scale):
 # Capture local camera
 #
 
-def capture_cam(camera, fps, scale):
+def capture_cam(camera, fps, scale, detect_faces):
     logger.info("Capture local camera ...")
     
     # Open cam
@@ -251,6 +259,12 @@ def capture_cam(camera, fps, scale):
         logger.error("Could not opened cam: %d", camera)
         exit(1)
 
+
+
+    # Faces
+    if detect_faces:
+        logger.info("Detect Faces")
+        f = faces()
         
 
     last_update_time = time.time()
@@ -273,10 +287,15 @@ def capture_cam(camera, fps, scale):
             cur_time = time.time()
             if cur_time - last_update_time > wait_time:
 
+                # Faces
+                if detect_faces:
+                    frame = f.find(frame)
+                
                 # Scale frame
                 frame = scale_frame(frame, scale)
 
-                msg['text'] = str(datetime.datetime.now())
+                msg['time'] = str(datetime.datetime.now())
+                msg['text'] = msg['time']
                 msg['image'] = convert_image_to_jpeg(frame)
 
                 send_msg(msg)
@@ -427,24 +446,20 @@ if __name__ == "__main__":
             security_protocol="PLAINTEXT"
 
         # To-Do: Add exception handling and retries
-        producer = connect_kafka (args.bootstrap, security_protocol, args.check_hostname, args.cafile)
+        producer = connect_kafka(args.bootstrap, security_protocol, args.check_hostname, args.cafile)
 
     else:
         connect_server(args.server)
-
-
-    #  Detect faces global var
-    detect_faces = args.faces
 
     #
     # Start the work ...
     #
      
     if args.screen:
-        capture_screen(args.box, args.fps, args.scale)
+        capture_screen(args.box, args.fps, args.scale, args.faces)
     elif args.images:
         read_imagefiles(args.path, args.fps, args.scale)
     else:
-        capture_cam(args.camera, args.fps, args.scale)
+        capture_cam(args.camera, args.fps, args.scale, args.faces)
 
 
