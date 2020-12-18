@@ -23,6 +23,9 @@ What is in the playground?
 
 ### Use case 1 - Stream web cam to web page
 
+Client sends web cam images via web sockets to the server.
+Server sends images to the browser.
+
 **Start the frontend backend:**
 ```
 cd frontend
