@@ -183,4 +183,6 @@ python client.py -l INFO  --fps 1  --scale 1 --bootstrap <kafka-bootstrap:443> -
 
 **Stream your screen, detect faces and send via kafka**
 
+```
 python client.py -l INFO  --fps 1  --scale 0.5 --screen --faces --bootstrap  <kafka-bootstrap:443> --ssl --cafile ../envs/ca.crt
+```
