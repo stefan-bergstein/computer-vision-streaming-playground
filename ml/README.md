@@ -1,6 +1,5 @@
-# Convert mvtec.com Metal Nut Data Set to Darknet Yolo format
-
-## Metal Nut Data Set
+# Model training for the Metal Nut Data Set
+## mvtec.com Metal Nut Data Set
 - Credits to https://www.mvtec.com/company/research/datasets
 - See also: https://www.mvtec.com/company/research/datasets/mvtec-ad
 
@@ -10,11 +9,7 @@ Paul Bergmann, Michael Fauser, David Sattlegger, Carsten Steger. MVTec AD - A Co
 ### LICENSE
 The data is released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0). For using the data in a way that falls under the commercial use clause of the license, please contact us via the form below.
 
-
-# Convert data
-
-Concepts:
-- TODO: describe flow
+# Convert  Data Set to Darknet Yolo format
 
 ## Prerequisites
 
@@ -52,4 +47,9 @@ python generate_yolo_conf.py
 cd ../darknet/
 zip -r data.zip data
 ```
+
+# Run training on Colab
+
+Upload `ml/notebooks/Metal_Nut_YOLOv4_Colab.ipynb` to your [Colab Account](https://colab.research.google.com/).
+Run the notebook using a GPU.
 
