@@ -23,6 +23,9 @@ What is in the playground?
 
 ### Use case 1 - Stream web cam to web page
 
+Client sends web cam images via web sockets to the server.
+Server sends images to the browser.
+
 **Start the frontend backend:**
 ```
 cd frontend
@@ -183,4 +186,6 @@ python client.py -l INFO  --fps 1  --scale 1 --bootstrap <kafka-bootstrap:443> -
 
 **Stream your screen, detect faces and send via kafka**
 
+```
 python client.py -l INFO  --fps 1  --scale 0.5 --screen --faces --bootstrap  <kafka-bootstrap:443> --ssl --cafile ../envs/ca.crt
+```
