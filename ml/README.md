@@ -1,5 +1,5 @@
 # Model training for the Metal Nut Data Set
-## mvtec.com Metal Nut Data Set
+## Metal Nut Data Set
 - Credits to https://www.mvtec.com/company/research/datasets
 - See also: https://www.mvtec.com/company/research/datasets/mvtec-ad
 
