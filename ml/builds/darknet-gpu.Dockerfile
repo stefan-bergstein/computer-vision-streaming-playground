@@ -1,7 +1,7 @@
 FROM nvidia/cuda:10.2-cudnn8-devel-centos8
 MAINTAINER Stefan Bergstein stefan.bergstein@gmail.com
 
-RUN yum install -y git && yum clean all
+RUN yum install -y git zip && yum clean all
 
 RUN git clone https://github.com/AlexeyAB/darknet.git && cd darknet \
     && sed -i 's/GPU=0/GPU=1/' Makefile \
