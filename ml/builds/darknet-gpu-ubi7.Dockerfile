@@ -1,4 +1,4 @@
-FROM cuda:10.1-cudnn7-devel-ubi7
+FROM image-registry.openshift-image-registry.svc:5000/sbergste-odh-gpu/cuda:10.1-cudnn7-devel-ubi7
 MAINTAINER Stefan Bergstein stefan.bergstein@gmail.com
 
 RUN yum install -y git zip && yum clean all
