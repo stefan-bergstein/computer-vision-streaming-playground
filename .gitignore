@@ -6,6 +6,10 @@ ml/data/metal_nut/
 
 # predictions
 ml/data/pred/
+ml/data/release/
+
+# weights file are too big
+*.weights
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

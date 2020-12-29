@@ -163,3 +163,16 @@ class_id = 1, name = bent, ap = 100.00%          (TP = 6, FP = 0)
  IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
  mean average precision (mAP@0.50) = 1.000000, or 100.00 % 
  ```
+
+
+ # Package model in tar file
+
+```
+tar -C data/weights/ -cvf data/release/model.tar yolov4-custom-metal_final.weights
+tar -C yolo-cfg/ -rvf data/release/model.tar yolov4-custom-metal-test.cfg
+tar -C darknet/data/metal_yolo/ -rvf data/release/model.tar classes.txt
+
+tar tvf data/release/model.tar
+```
+
+Optionally, create release on GitHub
