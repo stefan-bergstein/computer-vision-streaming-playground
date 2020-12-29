@@ -1,0 +1,27 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: darknet
+    component: darknet-cpu
+  name: darknet-cpu
+spec:
+  strategy:
+    dockerStrategy:
+      dockerfilePath: darknet-cpu-centos7.Dockerfile
+    type: Docker
+  source:
+    contextDir: ml/builds
+    git:
+      uri: https://github.com/stefan-bergstein/computer-vision-streaming-playground.git
+    type: Git
+  output:
+    to:
+      kind: ImageStreamTag
+      name: darknet-cpu:latest
+  runPolicy: Serial
+  triggers:
+  - type: ConfigChange
+  successfulBuildsHistoryLimit: 3
+  postCommit: {}
+  resources: {}

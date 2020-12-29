@@ -1,4 +1,3 @@
-
 #
 #  Create Yolo Data for MVTec Metal Nut Data
 #  - Find images on disk
@@ -20,7 +19,7 @@ from random import shuffle
 
 
 #
-# Gobal vars
+# Global vars
 #
 
 # Optionally add image without scratch or bent 
@@ -180,8 +179,6 @@ train = file_list[middle_index:]
 test = file_list[:middle_index]
 
 
-
-
 f = open(path_data + "train.txt", "w")
 for t in train:
     f.write(f'{t}\n')
@@ -191,3 +188,4 @@ f = open(path_data + "test.txt", "w")
 for t in test:
     f.write(f'{t}\n')
 f.close
+

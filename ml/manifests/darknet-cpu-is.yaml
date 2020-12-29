@@ -1,0 +1,9 @@
+kind: ImageStream
+apiVersion: v1
+metadata:
+  name: darknet-cpu
+  labels:
+    component: darknet-cpu
+spec:
+  lookupPolicy:
+    local: true

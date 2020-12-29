@@ -1,11 +1,11 @@
 # Darknet Yolo Training data
-
-darknet/data/
-*.zip
+ml/darknet/data/metal_yolo/
 
 # Input data
+ml/data/metal_nut/
 
-data/
+# predictions
+ml/data/pred/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

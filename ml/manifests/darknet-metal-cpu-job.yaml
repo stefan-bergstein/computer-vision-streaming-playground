@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: darknet-metal-cpu-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: darknet-metal-cpu-job
+        image: darknet-cpu:latest
+        command: ["/bin/sh", "-c"]
+        args:
+          - echo starting;
+            mkdir /tmp/darknet && cd /tmp/darknet;
+            curl -O https://raw.githubusercontent.com/stefan-bergstein/computer-vision-streaming-playground/main/ml/darknet/data.zip;
+            unzip data.zip && rm data.zip;
+            mkdir backup;
+            curl -L -O https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.conv.137;
+            /darknet/darknet detector train data/metal_data_ocp.data data/yolov4-custom-metal.cfg  yolov4.conv.137 -dont_show -map; 
+            echo done;
+        imagePullPolicy: Always
+      restartPolicy: Never
+  backoffLimit: 4
