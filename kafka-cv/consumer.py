@@ -11,6 +11,9 @@ import base64
 import time
 import socketio
 
+from darknetyolo import DarknetYolo
+from pathlib import Path
+
 is_connected=False
 
 sio = socketio.Client()
@@ -88,6 +91,12 @@ if __name__ == "__main__":
 
     ui_server = os.getenv("UI_SERVER", default="localhost:8088")
 
+    # Yolo conf
+
+    yolo_config_file = os.getenv("YOLO_CFG_FILE", default="./yolov4.cfg")
+    weights_file = os.getenv("YOLO_WEIGHTS_FILE", default="./yolov4.weigths")
+    class_file = os.getenv("YOLO_CLASS_FILE", default="./classes.txt")
+
     if not is_connected:
         connect_server(ui_server)
 
@@ -111,6 +120,15 @@ if __name__ == "__main__":
     print("BOOTSTRAP_SERVER:" + bootstrap_servers)
     print("TOPIC:" + topic)
 
+
+    #
+    # Configure barknet based Yolo neural network
+    # 
+
+    my_darknet = DarknetYolo(yolo_config_file=yolo_config_file, class_file=class_file, 
+                        weights_file=weights_file)
+
+
     push_bad = False
 
     for msg in consumer:
@@ -129,27 +147,48 @@ if __name__ == "__main__":
         #
         
         postion = 0
+
+        predict = True
         
         
         if 'label' in data:
         
-            if data['label'] == "good":
-                postion = 0
-                color = (0, 255, 0 ) # #BGR
+
+            if predict:
+
+                detected_classes, image_pred = my_darknet.predict(frame)
+
+                if detected_classes:
+                    print(detected_classes)
+                    postion = 1
+
+
+                send_data(image_pred, data['time'], postion)
+
+
             else:
-                postion = 1
-                color = (0, 0, 255 ) # #BGR
+                #  Simulation only. No Prediction
 
-        
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            stroke = 1
+                if data['label'] == "good":
+                    postion = 0
+                    color = (0, 255, 0 ) # #BGR
+                else:
+                    postion = 1
+                    color = (0, 0, 255 ) # #BGR
 
-            frameHeight, frameWidth = frame.shape[:2]
+            
+                font = cv2.FONT_HERSHEY_SIMPLEX
+                stroke = 1
+
+                frameHeight, frameWidth = frame.shape[:2]
+
+                cv2.putText(frame, data['label'], (10, frameHeight - 10 ), font, 0.5, color, stroke, cv2.LINE_AA)
+
+                send_data(frame, data['time'], postion)
 
 
-            cv2.putText(frame, data['label'], (10, frameHeight - 10 ), font, 0.5, color, stroke, cv2.LINE_AA)
 
-            send_data(frame, data['time'], postion)
+
         else:
 
             send_data(frame, data['time'], 0)

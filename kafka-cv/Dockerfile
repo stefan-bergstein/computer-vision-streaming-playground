@@ -8,6 +8,8 @@ COPY requirements.txt /app/
 
 WORKDIR /app
 RUN python3 -m pip install -r requirements.txt
+RUN curl -LO https://github.com/stefan-bergstein/computer-vision-streaming-playground/releases/download/v0.1-alpha/model.tar
+RUN tar xvf model.tar && rm -f model.tar
 
 ENTRYPOINT ["python3"]
 CMD ["consumer.py"]
