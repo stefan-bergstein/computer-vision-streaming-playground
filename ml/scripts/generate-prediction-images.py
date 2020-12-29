@@ -6,13 +6,26 @@
 #
 
 
-from darknetyolo import DarknetYolo
+
 
 import cv2
 import os
 import time
 
 from pathlib import Path
+
+
+import sys
+
+# insert at position 1 in the path, as 0 is the path of this file.
+sys.path.insert(1, '../../kafka-cv/')
+
+
+from darknetyolo import DarknetYolo
+
+
+
+
 
 #
 # Global vars
@@ -22,7 +35,7 @@ from pathlib import Path
 
 path_data = '../darknet/data/'
 path_yolo = '../darknet/data/metal_yolo/'
-path_pred = '../data/pred-test/'
+path_pred = '../data/pred/'
 
 yolo_config_file = '../yolo-cfg/yolov4-custom-metal-test.cfg'
 weights_file = '../data/weights/yolov4-custom-metal_final.weights'
