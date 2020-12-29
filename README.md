@@ -61,9 +61,20 @@ python app.py
 http://localhost:8088/ 
 
 
-**Start the kafka receiver:**
+**Kafka receiver incl. visual inspection**
 ```
 cd kafka-cv
+```
+
+*Set env vars for ML based visual inspection*
+```
+export YOLO_CFG_FILE='../ml/yolo-cfg/yolov4-custom-metal-test.cfg'
+export YOLO_WEIGHTS_FILE='../ml/data/weights/yolov4-custom-metal_final.weights'
+export YOLO_CLASS_FILE='../ml/darknet/data/metal_yolo/classes.txt'
+```
+
+*Start the kafka receiver:*
+```
 python consumer.py
 ```
 
@@ -144,7 +155,7 @@ cd ../envs
 oc extract secret/kafka-cluster-cluster-ca-cert --keys=ca.crt --to=- > ca.crt 
 ```
 
-### Get Get the correct route host
+### Get the correct route host
 ```
 oc get routes kafka-cluster-kafka-bootstrap -o=jsonpath='{.status.ingress[0].host}{"\n"}'
 ```
@@ -188,4 +199,13 @@ python client.py -l INFO  --fps 1  --scale 1 --bootstrap <kafka-bootstrap:443> -
 
 ```
 python client.py -l INFO  --fps 1  --scale 0.5 --screen --faces --bootstrap  <kafka-bootstrap:443> --ssl --cafile ../envs/ca.crt
+```
+
+
+**Stream metal nut images via kafka**
+
+http://cv-streaming-sbergste-opencv2.apps.ocp4.stormshift.coe.muc.redhat.com/
+
+```
+python client.py -l INFO  --fps 0.5  --scale 0.5 --images --bootstrap <kafka-bootstrap:443> --ssl --cafile ../envs/ca.crt
 ```
