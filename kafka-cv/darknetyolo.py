@@ -13,6 +13,8 @@ class DarknetYolo():
         self.probability_minimum = probability_minimum
         self.threshold = threshold
 
+        self.gpu = True # TO-DO check if gpu/cuda exists
+
         #
         # Load the YOLO network
         #
@@ -24,6 +26,14 @@ class DarknetYolo():
 
         # Read Yolo network
         self.network = cv2.dnn.readNetFromDarknet(yolo_config_file, weights_file)
+
+        if self.gpu:
+            self.network.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+            try:
+                self.network.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA_FP16)
+            except:
+                self.network.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+
 
         # Get list with names of all layers from the YOLO network
         layers_names_all = self.network.getLayerNames()
@@ -48,6 +58,15 @@ class DarknetYolo():
         # Get dimension of the input image
         h, w = in_image.shape[:2]  # Slicing from tuple only first two elements
 
+
+
+
+
+
+
+
+        start = time.time()
+
         # Create blob from the input image.
         # The 'cv2.dnn.blobFromImage' function returns 4-dimensional blob
         # from the image after mean subtraction, normalizing, and RB channels swapping.
@@ -58,7 +77,7 @@ class DarknetYolo():
         # Implementing forward pass with the blob and only through the output layers
         # Calculating at the same time, needed time for forward pass
         self.network.setInput(blob)  # setting blob as input to the network
-        start = time.time()
+        
         output_from_network = self.network.forward(self.layers_names_output)
         end = time.time()
 
