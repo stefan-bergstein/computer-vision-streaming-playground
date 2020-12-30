@@ -2,5 +2,5 @@ Flask-SocketIO==4.3.2
 requests==2.25.0
 kafka-python==2.0.2
 msgpack-python==0.5.6
-numpy==1.19.4
-opencv-python-headless==4.4.0.46
+#numpy==1.19.4
+# opencv-python-headless==4.4.0.46
