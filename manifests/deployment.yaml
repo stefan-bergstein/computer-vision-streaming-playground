@@ -15,17 +15,23 @@ spec:
         app: cv-streaming
     spec:
       containers:
-        - name: frontend
-          image: frontend:latest
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8088
-        - name: kafka-cv
-          image: kafka-cv:latest
-          imagePullPolicy: Always
-          envFrom:
-          - configMapRef:
-              name: kafka-cv-conf
+      - name: frontend
+        image: frontend:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8088
+      - name: kafka-cv
+        image: kafka-cv:gpu
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: kafka-cv-conf
+        resources:
+          limits:
+            nvidia.com/gpu: '1'
+          requests:
+            nvidia.com/gpu: '1'
+
 #          volumeMounts:
 #            - mountPath: /mnt/kafka-ca-cert
 #              name: kafka-ca-cert-volume

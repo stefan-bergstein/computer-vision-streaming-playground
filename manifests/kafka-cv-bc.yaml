@@ -8,7 +8,7 @@ metadata:
 spec:
   strategy:
     dockerStrategy:
-      dockerfilePath: Dockerfile
+      dockerfilePath: gpu.Dockerfile
     type: Docker
   source:
     contextDir: kafka-cv
@@ -18,7 +18,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: kafka-cv:latest
+      name: kafka-cv:gpu
   runPolicy: Serial
   triggers:
   - type: ConfigChange

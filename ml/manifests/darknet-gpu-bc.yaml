@@ -8,7 +8,7 @@ metadata:
 spec:
   strategy:
     dockerStrategy:
-      dockerfilePath: darknet-gpu.Dockerfile
+      dockerfilePath: gpu.Dockerfile
     type: Docker
   source:
     contextDir: ml/builds

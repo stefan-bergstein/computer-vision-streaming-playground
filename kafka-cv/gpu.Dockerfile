@@ -1,5 +1,5 @@
 #FROM nvcr.io/nvidia/cuda:10.2-cudnn8-devel-centos8  
-FROM quay.io/sbergste/opencv-gpu/latest 
+FROM quay.io/sbergste/opencv-gpu:latest 
 
 #RUN yum install -y python3; yum clean all
 #RUN python3 -m pip install --upgrade pip
