@@ -156,7 +156,11 @@ if __name__ == "__main__":
 
             if predict:
 
+
+                start = time.time()
                 detected_classes, image_pred = my_darknet.predict(frame)
+                end = time.time()
+                print('network.forward: Object detection took {:.5f} seconds'.format(end - start))
 
                 if detected_classes:
                     print(detected_classes)

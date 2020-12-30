@@ -63,7 +63,7 @@ class DarknetYolo():
         end = time.time()
 
         # Showing spent time for forward pass
-        #print('Object detection took {:.5f} seconds'.format(end - start))
+        print('network.forward: Object detection took {:.5f} seconds'.format(end - start))
 
         # Retrieve bounding boxes
 
