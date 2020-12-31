@@ -1,19 +1,17 @@
-#FROM nvcr.io/nvidia/cuda:10.2-cudnn8-devel-centos8  
-FROM quay.io/sbergste/opencv-gpu:latest 
 
-#RUN yum install -y python3; yum clean all
-#RUN python3 -m pip install --upgrade pip
+FROM quay.io/sbergste/darknet-opencv-gpu:latest
 
-RUN mkdir /app
-COPY *.py /app/
-COPY requirements.txt /app/
+COPY *.py /wrk/darknet
+COPY requirements-gpu.txt /wrk/darknet
 
-WORKDIR /app
-RUN python3 -m pip install -r requirements.txt
-RUN curl -LO https://github.com/stefan-bergstein/computer-vision-streaming-playground/releases/download/v0.1-alpha/model.tar
-RUN tar xvf model.tar && rm -f model.tar
+WORKDIR /wrk/darknet
+
+RUN python3 -m pip install -r requirements-gpu.txt \
+    && curl -LO https://github.com/stefan-bergstein/computer-vision-streaming-playground/releases/download/v0.1-alpha/model.tar \
+    && tar xvf model.tar --no-same-owner && rm -f model.tar
 
 User 1001
 
 ENTRYPOINT ["python3"]
 CMD ["consumer.py"]
+
