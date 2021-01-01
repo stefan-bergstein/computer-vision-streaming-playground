@@ -25,6 +25,7 @@ class DarknetYolo():
             self.labels = [line.strip() for line in f]
 
         # Read Yolo network
+        print("readNetFromDarknet...")
         self.network = cv2.dnn.readNetFromDarknet(yolo_config_file, weights_file)
 
         if self.gpu:

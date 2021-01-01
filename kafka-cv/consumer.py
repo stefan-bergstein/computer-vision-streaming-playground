@@ -116,21 +116,23 @@ if __name__ == "__main__":
 
 
 
-    print("Consume ...")
+    
     print("BOOTSTRAP_SERVER:" + bootstrap_servers)
     print("TOPIC:" + topic)
 
 
     #
-    # Configure barknet based Yolo neural network
+    # Configure darknet based Yolo neural network
     # 
 
+    print("Configure darknet based Yolo neural network ...")
     my_darknet = DarknetYolo(yolo_config_file=yolo_config_file, class_file=class_file, 
                         weights_file=weights_file)
 
 
     push_bad = False
 
+    print("Consume ...")
     for msg in consumer:
         data = json.loads(msg.value)
 
