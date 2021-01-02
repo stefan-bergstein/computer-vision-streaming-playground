@@ -122,10 +122,12 @@ if __name__ == "__main__":
     print("TOPIC:" + topic)
 
 
+    tf = True
+
     if tf:
         # Configure TF based Yolo neural network ...
         print("Configure TF based Yolo neural network ...")
-        my_tf = TensorflowYolo(tfmodel_path=tfmodel_path, class_file=class_file)
+        my_tf = TensorflowYolo(tfmodel_path=tfmodel_path)
 
     else:
         # Configure darknet based Yolo neural network
@@ -152,8 +154,6 @@ if __name__ == "__main__":
         # Add here the AI/ML CV Logic ....
         #
 
-        tf = True
-        
         postion = 0
         predict = True
         

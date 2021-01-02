@@ -43,7 +43,7 @@ class TensorflowYolo():
 
 
 
-    def __init__(self, tfmodel_path="tf-model", class_file="classes.txt", 
+    def __init__(self, tfmodel_path="tf-model", 
                     random_colors=False,
                     framework = 'tf',  # '(tf, tflite, trt')
                     size = 416,
