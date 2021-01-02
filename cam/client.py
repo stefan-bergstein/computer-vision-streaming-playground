@@ -412,7 +412,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-
+   
     #
     # Configure logging
     #
@@ -426,6 +426,15 @@ if __name__ == "__main__":
     logger.info("Log level set: {}"
                 .format(logging.getLevelName(logger.getEffectiveLevel())))
 
+    #
+    # Kafka setting via env vars
+    #
+
+    topic = os.getenv("TOPIC", default=args.topic)
+    bootstrap_servers = os.getenv("BOOTSTRAP_SERVER", default=args.bootstrap)
+    security_protocol = os.getenv("SECURITY_PROTOCOL", default="PLAINTEXT")
+    ssl_check_hostname = bool(os.getenv("SSL_CHECK_HOSTNAME", default="FALSE")) or args.check_hostname
+    ssl_cafile = os.getenv("SSL_CAFILE", default=args.cafile)
 
     #
     # Connect to target either to web socket or kafka
@@ -440,13 +449,14 @@ if __name__ == "__main__":
 
         topic = args.topic
         
-        if args.ssl:
-            security_protocol="SSL"
-        else:
-            security_protocol="PLAINTEXT"
+        if security_protocol == "PLAINTEXT":
+            if args.ssl:
+                security_protocol="SSL"
+            else:
+                security_protocol="PLAINTEXT"
 
         # To-Do: Add exception handling and retries
-        producer = connect_kafka(args.bootstrap, security_protocol, args.check_hostname, args.cafile)
+        producer = connect_kafka(bootstrap_servers, security_protocol, ssl_check_hostname, ssl_cafile)
 
     else:
         connect_server(args.server)

@@ -122,7 +122,7 @@ if __name__ == "__main__":
     print("TOPIC:" + topic)
 
 
-    tf = True
+    tf = True # FWIW, TF can be used use GPU and CPU, but lets keep the darknet code
 
     if tf:
         # Configure TF based Yolo neural network ...
@@ -168,7 +168,7 @@ if __name__ == "__main__":
                     detected_classes, image_pred = my_darknet.predict(frame)
 
                 end = time.time()
-                print('darknet.predict: Total object detection took {:.5f} seconds'.format(end - start))
+                print('Predict: Total object detection took {:.5f} seconds'.format(end - start))
 
                 if detected_classes:
                     print(detected_classes)
