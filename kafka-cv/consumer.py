@@ -11,8 +11,11 @@ import base64
 import time
 import socketio
 
+# Predict using Darknet
 from darknetyolo import DarknetYolo
-from pathlib import Path
+
+# Predict using Tensorflow
+from tensorflowyolo import TensorflowYolo
 
 is_connected=False
 
@@ -96,6 +99,7 @@ if __name__ == "__main__":
     yolo_config_file = os.getenv("YOLO_CFG_FILE", default="./yolov4.cfg")
     weights_file = os.getenv("YOLO_WEIGHTS_FILE", default="./yolov4.weigths")
     class_file = os.getenv("YOLO_CLASS_FILE", default="./classes.txt")
+    tfmodel_path = os.getenv("TF_MODEL_PATH", default="./tf-model")
 
     if not is_connected:
         connect_server(ui_server)
@@ -113,21 +117,21 @@ if __name__ == "__main__":
         sio.disconnect()
         print("KafkaConsumer: ", str(e))
         sys.exit('Could not connect to Kafka:' + bootstrap_servers)
-
-
-
     
     print("BOOTSTRAP_SERVER:" + bootstrap_servers)
     print("TOPIC:" + topic)
 
 
-    #
-    # Configure darknet based Yolo neural network
-    # 
+    if tf:
+        # Configure TF based Yolo neural network ...
+        print("Configure TF based Yolo neural network ...")
+        my_tf = TensorflowYolo(tfmodel_path=tfmodel_path, class_file=class_file)
 
-    print("Configure darknet based Yolo neural network ...")
-    my_darknet = DarknetYolo(yolo_config_file=yolo_config_file, class_file=class_file, 
-                        weights_file=weights_file)
+    else:
+        # Configure darknet based Yolo neural network
+        print("Configure darknet based Yolo neural network ...")
+        my_darknet = DarknetYolo(yolo_config_file=yolo_config_file, class_file=class_file, 
+                            weights_file=weights_file)
 
 
     push_bad = False
@@ -147,20 +151,22 @@ if __name__ == "__main__":
         #
         # Add here the AI/ML CV Logic ....
         #
+
+        tf = True
         
         postion = 0
-
         predict = True
-        
         
         if 'label' in data:
         
-
             if predict:
-
-
                 start = time.time()
-                detected_classes, image_pred = my_darknet.predict(frame)
+
+                if tf:
+                    detected_classes, image_pred = my_tf.predict(frame)
+                else:
+                    detected_classes, image_pred = my_darknet.predict(frame)
+
                 end = time.time()
                 print('darknet.predict: Total object detection took {:.5f} seconds'.format(end - start))
 
@@ -168,9 +174,7 @@ if __name__ == "__main__":
                     print(detected_classes)
                     postion = 1
 
-
                 send_data(image_pred, data['time'], postion)
-
 
             else:
                 #  Simulation only. No Prediction
@@ -182,21 +186,13 @@ if __name__ == "__main__":
                     postion = 1
                     color = (0, 0, 255 ) # #BGR
 
-            
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 stroke = 1
-
                 frameHeight, frameWidth = frame.shape[:2]
-
                 cv2.putText(frame, data['label'], (10, frameHeight - 10 ), font, 0.5, color, stroke, cv2.LINE_AA)
-
                 send_data(frame, data['time'], postion)
 
-
-
-
         else:
-
             send_data(frame, data['time'], 0)
 
 

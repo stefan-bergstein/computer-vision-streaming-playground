@@ -176,3 +176,23 @@ tar tvf data/release/model.tar
 ```
 
 Optionally, create release on GitHub
+
+
+
+# Convert Darknet Yolo to Tensorflow
+
+## Convert model
+
+**TO-DO: Describe**
+- Clone repo
+- Run ... `python save_model.py --weights ./data/custom.weights --output ./checkpoints/custom-416 --input_size 416 --model yolov4`
+
+## Package TF model in tar file
+
+```
+cd ml
+tar -C data/ -cvf data/release/tf-model.tar tf-model/
+tar -C darknet/data/metal_yolo/ -rvf data/release/tf-model.tar classes.txt
+```
+
+Optionally, create release on GitHub

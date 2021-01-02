@@ -4,11 +4,11 @@ metadata:
   labels:
     app: cv-streaming
     component: kafka-cv
-  name: kafka-cv
+  name: kafka-cv-gpu
 spec:
   strategy:
     dockerStrategy:
-      dockerfilePath: Dockerfile
+      dockerfilePath: gpu.Dockerfile
     type: Docker
   source:
     contextDir: kafka-cv
@@ -18,7 +18,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: kafka-cv:cpu
+      name: kafka-cv:gpu
   runPolicy: Serial
   triggers:
   - type: ConfigChange

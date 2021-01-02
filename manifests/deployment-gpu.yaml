@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cv-streaming
+  name: cv-streaming-gpu
   labels:
     app: cv-streaming
 spec:
@@ -21,16 +21,16 @@ spec:
         ports:
           - containerPort: 8088
       - name: kafka-cv
-        image: kafka-cv:cpu
+        image: kafka-cv:gpu
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
             name: kafka-cv-conf
-#        resources:
-#          limits:
-#            nvidia.com/gpu: '1'
-#          requests:
-#            nvidia.com/gpu: '1'
+        resources:
+          limits:
+            nvidia.com/gpu: '1'
+          requests:
+            nvidia.com/gpu: '1'
 
 #          volumeMounts:
 #            - mountPath: /mnt/kafka-ca-cert
