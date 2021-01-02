@@ -9,4 +9,4 @@ RUN python3 -m pip install -r requirements.txt
 
 EXPOSE 8088
 ENTRYPOINT ["python3"]
-CMD ["client.py -l INFO  --fps 0.5  --scale 0.5 --images"]
+CMD ["client.py", "-l", "INFO", "--fps", "0.5", "--scale", "0.5", "--images"]
