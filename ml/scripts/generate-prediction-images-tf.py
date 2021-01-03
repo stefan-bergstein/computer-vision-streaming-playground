@@ -33,7 +33,7 @@ class_file = f"{path_yolo}classes.txt"
 
 Path(os.path.dirname(path_pred)).mkdir(parents=True, exist_ok=True)
 
-my_tf = TensorflowYolo(tfmodel_path=tfmodel_path, class_file=class_file)
+my_tf = TensorflowYolo(tfmodel_path=tfmodel_path)
 
 
 #
