@@ -64,13 +64,46 @@ http://localhost:8088/
 **Kafka receiver incl. visual inspection**
 ```
 cd kafka-cv
+pip install -r requirements.txt
 ```
 
 *Set env vars for ML based visual inspection*
+
+Below are 'outdated'the settings for the darknet based ML. Let's skip and used the TF model.
 ```
 export YOLO_CFG_FILE='../ml/yolo-cfg/yolov4-custom-metal-test.cfg'
 export YOLO_WEIGHTS_FILE='../ml/data/weights/yolov4-custom-metal_final.weights'
 export YOLO_CLASS_FILE='../ml/darknet/data/metal_yolo/classes.txt'
+```
+
+*Tensorflow settings:*
+
+This assumes the TF model is saved in  `ml/data/tf-model/`. In case you don't have a TF model, you can download it here:
+
+```
+   cd ../ml/data/
+   curl -LO https://github.com/stefan-bergstein/computer-vision-streaming-playground/releases/download/v0.1-alpha-tf/tf-model.tar
+   tar xvf tf-model.tar --no-same-owner && rm -f tf-model.tar
+```
+
+Set the `TF_MODEL_PATH` env var:
+```
+export TF_MODEL_PATH=../ml/data/tf-model/
+```
+
+We need the `classes.txt` in the `kafka-cv` directory:
+```
+cd ../../kafka-cv
+ln -s ../ml/darknet/data/metal_yolo/classes.txt
+```
+
+or create local file in `kafka-cv`:
+```
+cd ../../kafka-cv
+cat << EOF > classes.txt
+scratch
+bent
+EOF
 ```
 
 *Start the kafka receiver:*
