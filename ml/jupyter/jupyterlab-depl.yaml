@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupyterlab-gpu
+spec:
+  selector:
+    matchLabels:
+      app: jupyterlab
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jupyterlab
+    spec:
+      containers:
+        - name: jupyterlab-gpu
+          image: quay.io/sbergste/jupyterlab-tf:2.3.0-gpu
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8888
+          volumeMounts:
+          - mountPath: /app
+            name: lab-data
+          resources:
+            limits:
+              nvidia.com/gpu: '1'
+            requests:
+              nvidia.com/gpu: '1'
+      volumes:
+      - name: lab-data
+        emptyDir: {}
