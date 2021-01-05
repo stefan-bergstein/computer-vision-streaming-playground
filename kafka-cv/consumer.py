@@ -52,14 +52,15 @@ def connect_server(server):
         
     time.sleep(1)
 
-def send_data(frame, text, position):
+def send_data(frame, text, cam_id, status):
     #frame = cv2.resize(frame, (640, 480))
     sio.emit(
             'cam2server',
             {
                 'image': convert_image_to_jpeg(frame),
                 'text': text,
-                'pos': position
+                'cam': cam_id,
+                'status': status
             })
 
 def convert_image_to_jpeg(image):
@@ -149,12 +150,16 @@ if __name__ == "__main__":
         if not is_connected:
             connect_server(ui_server)
 
+        # check / set cam ID
+        cam_id = 0
+        if 'id' in data:
+            cam_id = data['id']
 
         #
         # Add here the AI/ML CV Logic ....
         #
 
-        postion = 0
+        status = 0
         predict = True
         
         if 'label' in data:
@@ -172,28 +177,28 @@ if __name__ == "__main__":
 
                 if detected_classes:
                     print(detected_classes)
-                    postion = 1
+                    status = 1
 
-                send_data(image_pred, data['time'], postion)
+                send_data(image_pred, data['time'], cam_id, status)
 
             else:
                 #  Simulation only. No Prediction
 
                 if data['label'] == "good":
-                    postion = 0
+                    status = 0
                     color = (0, 255, 0 ) # #BGR
                 else:
-                    postion = 1
+                    status = 1
                     color = (0, 0, 255 ) # #BGR
 
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 stroke = 1
                 frameHeight, frameWidth = frame.shape[:2]
                 cv2.putText(frame, data['label'], (10, frameHeight - 10 ), font, 0.5, color, stroke, cv2.LINE_AA)
-                send_data(frame, data['time'], postion)
+                send_data(frame, data['time'], cam_id, status)
 
         else:
-            send_data(frame, data['time'], 0)
+            send_data(frame, data['time'], cam_id, 0)
 
 
 

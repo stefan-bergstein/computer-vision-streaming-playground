@@ -33,6 +33,7 @@ logger = logging.getLogger(module)
 send_kafka = False
 producer = None
 topic = None
+cam_id = 0
 
 #
 # Sending message via web sockets
@@ -209,7 +210,7 @@ def read_imagefiles(path, fps, scale):
         # Empty Message 
         msg = {     
             "image": "empty",   
-            "id": "empty",
+            "id": cam_id,
             "time": "empty",
             "text": "empty",
             "label": "empty"                
@@ -337,7 +338,7 @@ if __name__ == "__main__":
 
     parser.add_argument(
             '--camera', type=int, default='0',
-            help='Camera index')
+            help='Webcam index')
 
     parser.add_argument(
             '--scale',  type=float, default=1.0,
@@ -407,6 +408,10 @@ if __name__ == "__main__":
             '--fps',  type=float, default=10.0,
             help='Frames per second')    
 
+    parser.add_argument(
+            '--camid', type=str, default='0',
+            help='ID number for the simulated camera')
+    
     parser.add_argument('-l', '--log-level', default='WARNING',
                                 help='Set log level to ERROR, WARNING, INFO or DEBUG')
 
@@ -435,6 +440,9 @@ if __name__ == "__main__":
     security_protocol = os.getenv("SECURITY_PROTOCOL", default="PLAINTEXT")
     ssl_check_hostname = bool(os.getenv("SSL_CHECK_HOSTNAME", default="FALSE")) or args.check_hostname
     ssl_cafile = os.getenv("SSL_CAFILE", default=args.cafile)
+
+
+    cam_id = int(os.getenv("TOPIC", default=args.camid))
 
     #
     # Connect to target either to web socket or kafka

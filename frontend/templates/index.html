@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <link rel="icon" href="{{ url_for('static', filename = 'favicon.ico') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'style.css') }}">
+
   <title>CV Streaming</title>
 
   <script type="text/javascript"
@@ -14,25 +16,89 @@
 
 </head>
     <body >
+        <h1>Automated Visual Inspection</h1>
         <table style="width:100%">
             <tr>
                 <td>
-                    <div style="width: 70%">
-                        <img id="streaming-image" src="">
+                    <p class="p1">Passed:</p>
+                </td>
+                <td>
+                    <p class="p2">Not passed:</p>
+                </td>
+            </tr>              
+            <tr>
+                <td>
+                    <div >
+                        <img id="streaming-image-1-1" src="">
                     </div>
                     <div >
-                        <p id="streaming-text"></p>
+                        <p id="streaming-text-1-1"></p>
                     </div>
                 </td>
                 <td>
-                    <div style="width: 70%">
-                        <img id="streaming-image-1" src="">
+                    <div >
+                        <img id="streaming-image-1-2" src="">
                     </div>
                     <div >
-                        <p id="streaming-text-1"></p>
+                        <p id="streaming-text-1-2"></p>
                     </div>
                 </td>
-            </tr>           
+            </tr>  
+            <tr>
+                <td>
+                    <div >
+                        <img id="streaming-image-2-1" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-2-1"></p>
+                    </div>
+                </td>
+                <td>
+                    <div >
+                        <img id="streaming-image-2-2" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-2-2"></p>
+                    </div>
+                </td>
+            </tr> 
+            <tr>
+                <td>
+                    <div >
+                        <img id="streaming-image-3-1" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-3-1"></p>
+                    </div>
+                </td>
+                <td>
+                    <div >
+                        <img id="streaming-image-3-2" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-3-2"></p>
+                    </div>
+                </td>
+            </tr> 
+            <tr>
+                <td>
+                    <div >
+                        <img id="streaming-image-4-1" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-4-1"></p>
+                    </div>
+                </td>
+                <td>
+                    <div >
+                        <img id="streaming-image-4-2" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-4-2"></p>
+                    </div>
+                </td>
+            </tr>             
+            
         </table>
 
     </body>
@@ -40,12 +106,29 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function(event) {
-    const image = document.getElementById("streaming-image");
-    const text = document.getElementById("streaming-text");
+    const image_1_1 = document.getElementById("streaming-image-1-1");
+    const text_1_1 = document.getElementById("streaming-text-1-1");
 
-    const image_1 = document.getElementById("streaming-image-1");
-    const text_1 = document.getElementById("streaming-text-1");
+    const image_1_2 = document.getElementById("streaming-image-1-2");
+    const text_1_2 = document.getElementById("streaming-text-1-2");
 
+    const image_2_1 = document.getElementById("streaming-image-2-1");
+    const text_2_1 = document.getElementById("streaming-text-2-1");
+
+    const image_2_2 = document.getElementById("streaming-image-2-2");
+    const text_2_2 = document.getElementById("streaming-text-2-2");
+
+    const image_3_1 = document.getElementById("streaming-image-3-1");
+    const text_3_1 = document.getElementById("streaming-text-3-1");
+
+    const image_3_2 = document.getElementById("streaming-image-3-2");
+    const text_3_2 = document.getElementById("streaming-text-3-2");
+
+    const image_4_1 = document.getElementById("streaming-image-4-1");
+    const text_4_1 = document.getElementById("streaming-text-4-1");
+
+    const image_4_2 = document.getElementById("streaming-image-4-2");
+    const text_4_2 = document.getElementById("streaming-text-4-2");
 
     var socket = io.connect('http://' + document.domain + ':' + location.port + '/ui', {
       reconnection: false
@@ -72,21 +155,66 @@
     });
 
     socket.on('server2ui', (msg) => {
-        if (typeof msg.pos === 'undefined') {
-            // No position defined -> use default
-            image.src = msg.image;
-            text.innerHTML = msg.text;            
+        if (typeof msg.status === 'undefined') {
+            // No status defined -> use default
+            image_1_1.src = msg.image;
+            text_1_1.innerHTML = msg.text;            
         } else {
-            switch(msg.pos) {
-                case 1:
-                    image_1.src = msg.image;
-                    text_1.innerHTML = msg.text;
-                    break;
-                default:
-                    image.src = msg.image;
-                    text.innerHTML = msg.text;
+            if (typeof msg.cam === 'undefined') {
+                prefix = ''
+            } else {
+                prefix = 'CAM ' + msg.cam + ': ';
+                switch(msg.cam) {
+                    case 1:
+                        switch(msg.status) {
+                            case 1:
+                                image_2_2.src = msg.image;
+                                text_2_2.innerHTML = prefix + msg.text;
+                                break;
+                            default:
+                                image_2_1.src = msg.image;
+                                text_2_1.innerHTML = prefix + msg.text;
+                        }
+                        break;
+
+                    case 2:
+                        switch(msg.status) {
+                            case 1:
+                                image_3_2.src = msg.image;
+                                text_3_2.innerHTML = prefix + msg.text;
+                                break;
+                            default:
+                                image_3_1.src = msg.image;
+                                text_3_1.innerHTML = prefix + msg.text;
+                        }
+                        break;
+
+                    case 3:
+                        switch(msg.status) {
+                            case 1:
+                                image_4_2.src = msg.image;
+                                text_4_2.innerHTML = prefix + msg.text;
+                                break;
+                            default:
+                                image_4_1.src = msg.image;
+                                text_4_1.innerHTML = prefix + msg.text;
+                        }
+                        break;
+
+                    default:
+                        switch(msg.status) {
+                            case 1:
+                                image_1_2.src = msg.image;
+                                text_1_2.innerHTML = prefix + msg.text;
+                                break;
+                            default:
+                                image_1_1.src = msg.image;
+                                text_1_1.innerHTML = prefix + msg.text;
+                        }
+                }
+
             }
-            console.log('Position: ' + msg.pos);    
+            console.log('Status: ' + msg.status);    
         }
 
     });
