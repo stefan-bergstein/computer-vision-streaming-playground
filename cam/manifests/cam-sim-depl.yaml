@@ -15,17 +15,20 @@ spec:
         app: cam-sim
     spec:
       containers:
-      - name: cam-sim
-        image: cam-sim:latest
-        imagePullPolicy: Always
-        envFrom:
-        - configMapRef:
-            name: kafka-cv-conf
-        volumeMounts:
-          - mountPath: /mnt/kafka-ca-cert
-            name: kafka-ca-cert-volume
+        - name: cam-sim
+          image: cam-sim:latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: cam-sim-conf
+            - configMapRef:
+                name: kafka-ca-cert
+          volumeMounts:
+            - name: kafka-ca-cert-volume
+              mountPath: /mnt/kafka-ca-cert
       volumes:
-        - configMap:
-            defaultMode: 420
+        - name: kafka-ca-cert-volume
+          configMap:
             name: kafka-ca-cert
-          name: kafka-ca-cert-volume
+            defaultMode: 420
+      restartPolicy: Always

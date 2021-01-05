@@ -7,25 +7,28 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: cam-sim
+      app: cam-sim-1
   replicas: 1
   template:
     metadata:
       labels:
-        app: cam-sim
+        app: cam-sim-1
     spec:
       containers:
-      - name: cam-sim
-        image: cam-sim:latest
-        imagePullPolicy: Always
-        envFrom:
-        - configMapRef:
-            name: kafka-cv-conf-1
-        volumeMounts:
-          - mountPath: /mnt/kafka-ca-cert
-            name: kafka-ca-cert-volume
+        - name: cam-sim
+          image: cam-sim:latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: cam-sim-conf-1
+            - configMapRef:
+                name: kafka-ca-cert
+          volumeMounts:
+            - name: kafka-ca-cert-volume
+              mountPath: /mnt/kafka-ca-cert
       volumes:
-        - configMap:
-            defaultMode: 420
+        - name: kafka-ca-cert-volume
+          configMap:
             name: kafka-ca-cert
-          name: kafka-ca-cert-volume
+            defaultMode: 420
+      restartPolicy: Always

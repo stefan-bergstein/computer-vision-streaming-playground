@@ -90,7 +90,9 @@ if __name__ == "__main__":
     topic = os.getenv("TOPIC", default="distributed-video1")
     bootstrap_servers = os.getenv("BOOTSTRAP_SERVER", default="localhost:9092")
     security_protocol = os.getenv("SECURITY_PROTOCOL", default="PLAINTEXT")
-    ssl_check_hostname = bool(os.getenv("SSL_CHECK_HOSTNAME", default="FALSE"))
+    ssl_check_hostname = bool(os.getenv("SSL_CHECK_HOSTNAME", default="FALSE").lower() == 'true')
+
+
     ssl_cafile = os.getenv("SSL_CAFILE", default="./ca.crt")
 
     ui_server = os.getenv("UI_SERVER", default="localhost:8088")
