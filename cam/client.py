@@ -315,6 +315,12 @@ def capture_cam(camera, fps, scale, detect_faces):
 
 def connect_kafka(bootstrap_servers, security_protocol, ssl_check_hostname, ssl_cafile):
 
+    logger.info(f"Connect to kafka bootstrap_servers: {bootstrap_servers} " )
+    logger.info(f"- security_protocol: {security_protocol}")
+    logger.info(f"- ssl_check_hostname: {ssl_check_hostname}")
+    logger.info(f"- ssl_cafile: {ssl_cafile}")
+
+
     producer = KafkaProducer(value_serializer=msgpack.dumps,
         bootstrap_servers=bootstrap_servers,
         security_protocol=security_protocol,
@@ -438,7 +444,8 @@ if __name__ == "__main__":
     topic = os.getenv("TOPIC", default=args.topic)
     bootstrap_servers = os.getenv("BOOTSTRAP_SERVER", default=args.bootstrap)
     security_protocol = os.getenv("SECURITY_PROTOCOL", default="PLAINTEXT")
-    ssl_check_hostname = bool(os.getenv("SSL_CHECK_HOSTNAME", default="FALSE")) or args.check_hostname
+    ssl_check_hostname = bool(os.getenv("SSL_CHECK_HOSTNAME", default="FALSE").lower() == 'true') or args.check_hostname
+
     ssl_cafile = os.getenv("SSL_CAFILE", default=args.cafile)
 
     # ID number for the simulated camera
