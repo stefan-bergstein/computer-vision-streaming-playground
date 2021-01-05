@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cam-sim-conf
+  name: cam-sim-conf-1
 data:
   BOOTSTRAP_SERVER: kafka-cluster-kafka-bootstrap:9092
   SECURITY_PROTOCOL: SSL
   SSL_CAFILE: /mnt/kafka-ca-cert/kafka-ca.crt
-  CAMID: 0
+  CAMID: 1

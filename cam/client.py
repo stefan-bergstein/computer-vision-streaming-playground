@@ -441,8 +441,8 @@ if __name__ == "__main__":
     ssl_check_hostname = bool(os.getenv("SSL_CHECK_HOSTNAME", default="FALSE")) or args.check_hostname
     ssl_cafile = os.getenv("SSL_CAFILE", default=args.cafile)
 
-
-    cam_id = int(os.getenv("TOPIC", default=args.camid))
+    # ID number for the simulated camera
+    cam_id = int(os.getenv("CAMID", default=args.camid))
 
     #
     # Connect to target either to web socket or kafka
