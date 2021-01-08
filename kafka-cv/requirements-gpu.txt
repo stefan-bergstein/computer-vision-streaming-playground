@@ -1,4 +1,4 @@
-Flask-SocketIO==4.3.2
+Flask-SocketIO==5.0.1
 requests==2.25.0
 kafka-python==2.0.2
 msgpack-python==0.5.6

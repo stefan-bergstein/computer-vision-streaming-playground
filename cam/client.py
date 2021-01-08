@@ -23,7 +23,7 @@ from find_faces import faces
 #
 # Globals
 #
-
+web_server=None
 
 # Logging
 module = sys.modules['__main__'].__file__
@@ -38,10 +38,10 @@ cam_id = 0
 #
 # Sending message via web sockets
 #
-
+global is_connected
 is_connected=False
 
-sio = socketio.Client()
+sio = socketio.Client(logger=False,reconnection=True,reconnection_attempts=0)
 
 @sio.event
 def connect():
@@ -49,30 +49,27 @@ def connect():
 
 
 @sio.event
-def connect_error():
-    print('* Failed to connect to server.')
-
-
-@sio.event
 def disconnect():
     print('* Disconnected from server.')
     global is_connected
     is_connected=False
+    #connect_server(web_server)
 
 
 def connect_server(server):
     print('* Connecting to server {} ...'.format(server))
+    global is_connected
     
-    try:
-        sio.connect(server,  namespaces=['/cam'])
-        print('my sid is', sio.sid)
-        global is_connected
-        is_connected=True
-        print("is_connected", is_connected)
-    except:
-        print('* Could not connect')
-        
-    time.sleep(1)
+    while not is_connected:
+        try:
+            sio.connect(server,  namespaces=['/cam'])
+            print('my sid is', sio.sid)
+            is_connected=True
+            print("is_connected", is_connected)
+        except:
+            print('* Could not connect')
+            
+        time.sleep(2)
 
 
 #
@@ -83,7 +80,8 @@ def send_msg(msg):
     if send_kafka:
         producer.send(topic, json.dumps(msg))
     else:
-        sio.emit('cam2server', msg )
+        if is_connected:
+            sio.emit('cam2server', msg, namespace='/cam' )
     return
 
 #
@@ -138,7 +136,8 @@ def capture_screen(box, fps, scale, detect_faces):
             # Empty Message 
             msg = {     
                 "image": "empty",   
-                "id": "empty",
+                "id": cam_id,
+                "type": "screen",
                 "time": "empty",
                 "text": "empty"
             }   
@@ -211,6 +210,7 @@ def read_imagefiles(path, fps, scale):
         msg = {     
             "image": "empty",   
             "id": cam_id,
+            "type": "image",
             "time": "empty",
             "text": "empty",
             "label": "empty"                
@@ -271,13 +271,16 @@ def capture_cam(camera, fps, scale, detect_faces):
     last_update_time = time.time()
     wait_time = (1/fps)
 
-    try:
-        while True:
+ 
+    while True:
+
+        try:
 
             # Empty Message 
             msg = {     
                 "image": "empty",   
-                "id": "empty",
+                "id": cam_id,
+                "type": "cam",
                 "time": "empty",
                 "text": "empty"
             }    
@@ -306,10 +309,11 @@ def capture_cam(camera, fps, scale, detect_faces):
             else:
                 time.sleep(wait_time)
 
-    except Exception as e: 
-  
-        logger.error(str(e) + "\nExiting.")
-        sys.exit(1)
+        except Exception as e: 
+    
+            logger.error(str(e))
+            time.sleep(2)
+            #sys.exit(1)
         
     return
 
@@ -455,6 +459,8 @@ if __name__ == "__main__":
     # Connect to target either to web socket or kafka
     #
 
+    web_server = args.server
+
     if args.web:
         send_kafka = False
     else:
@@ -474,7 +480,7 @@ if __name__ == "__main__":
         producer = connect_kafka(bootstrap_servers, security_protocol, ssl_check_hostname, ssl_cafile)
 
     else:
-        connect_server(args.server)
+        connect_server(web_server)
 
     #
     # Start the work ...

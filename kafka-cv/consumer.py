@@ -19,16 +19,11 @@ from tensorflowyolo import TensorflowYolo
 
 is_connected=False
 
-sio = socketio.Client()
+sio = socketio.Client(logger=False,reconnection=True,reconnection_attempts=0)
 
 @sio.event
 def connect():
     print('* Successfully connected to server.')
-
-
-@sio.event
-def connect_error():
-    print('* Failed to connect to server.')
 
 
 @sio.event
@@ -42,7 +37,7 @@ def connect_server(server):
     print('* Connecting to server http://{} ...'.format(server))
     
     try:
-        sio.connect('http://{}'.format(server),  namespaces=['/cam'])
+        sio.connect('http://{}'.format(server),  namespaces=['/kcv'])
         print('my sid is', sio.sid)
         global is_connected
         is_connected=True
@@ -55,13 +50,13 @@ def connect_server(server):
 def send_data(frame, text, cam_id, status):
     #frame = cv2.resize(frame, (640, 480))
     sio.emit(
-            'cam2server',
+            'kcv2server',
             {
                 'image': convert_image_to_jpeg(frame),
                 'text': text,
-                'cam': cam_id,
+                'id': cam_id,
                 'status': status
-            })
+            }, namespace='/kcv')
 
 def convert_image_to_jpeg(image):
     # Encode frame as jpeg

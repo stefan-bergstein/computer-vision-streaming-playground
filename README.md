@@ -29,16 +29,35 @@ Server sends images to the browser.
 **Start the frontend backend:**
 ```
 cd frontend
-python app.py
+```
+Install requirement in a venv:
+```
+python3 -m venv venv 
+source venv/bin/activate
+pip3 install -r requirements.txt
+```
+
+Start the frontend:
+```
+python3 app.py
 ```
 
 **Open Browser**
 
-http://localhost:8088/ 
+http://localhost:8088/cam/ 
 
 **Stream your webcam**
 ```
 cd cam
+```
+
+Install requirement in a venv:
+```
+python3 -m venv venv 
+source venv/bin/activate
+pip3 install -r requirements.txt
+```
+```
 python client.py --web
 ```
 
@@ -64,7 +83,9 @@ http://localhost:8088/
 **Kafka receiver incl. visual inspection**
 ```
 cd kafka-cv
-pip install -r requirements.txt
+python3 -m venv venv 
+source venv/bin/activate
+pip3 install -r requirements.txt
 ```
 
 *Set env vars for ML based visual inspection*
@@ -108,7 +129,7 @@ EOF
 
 *Start the kafka receiver:*
 ```
-python consumer.py
+python3 consumer.py
 ```
 
 **Stream images**
