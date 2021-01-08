@@ -19,6 +19,7 @@ import socketio
 import logging
 
 from find_faces import faces
+from detect_objects import objects
 
 #
 # Globals
@@ -107,7 +108,7 @@ def scale_frame(frame, scale):
 # Capture local screen
 #
 
-def capture_screen(box, fps, scale, detect_faces):
+def capture_screen(box, fps, scale, detect_faces, detect_objects):
     logger.info("Capture local screen ...")
 
     # Area to capture from screen
@@ -127,11 +128,17 @@ def capture_screen(box, fps, scale, detect_faces):
         logger.info("Detect Faces")
         f = faces()
 
+    # Objects
+    if detect_objects:
+        logger.info("Detect Objects")
+        o = objects()
+
+
     last_update_time = time.time()
     wait_time = (1/fps)
 
-    try:
-        while True:
+    while True:
+        try:
 
             # Empty Message 
             msg = {     
@@ -143,7 +150,11 @@ def capture_screen(box, fps, scale, detect_faces):
             }   
             
             # Grab frame from screen
-            frame = np.array(sct.grab(screen_box))
+
+            im = np.array(sct.grab(screen_box))
+
+            frame = cv2.cvtColor(im, cv2.COLOR_BGRA2BGR)
+
             msg['text'] ="Screen: " + str(screen_box)
 
             cur_time = time.time()
@@ -152,6 +163,11 @@ def capture_screen(box, fps, scale, detect_faces):
                 # Faces
                 if detect_faces:
                     frame = f.find(frame)
+
+                # Objects
+                if detect_objects:
+                    frame = o.detect(frame)
+                    
 
                 # Scale frame
                 frame = scale_frame(frame, scale)
@@ -166,10 +182,9 @@ def capture_screen(box, fps, scale, detect_faces):
             else:
                 time.sleep(wait_time)
 
-    except Exception as e: 
-  
-        logger.error(str(e) + "\nExiting.")
-        sys.exit(1)
+        except Exception as e: 
+                logger.error(str(e))
+                time.sleep(2)
 
     return
 
@@ -249,7 +264,7 @@ def read_imagefiles(path, fps, scale):
 # Capture local camera
 #
 
-def capture_cam(camera, fps, scale, detect_faces):
+def capture_cam(camera, fps, scale, detect_faces, detect_objects):
     logger.info("Capture local camera ...")
     
     # Open cam
@@ -266,7 +281,11 @@ def capture_cam(camera, fps, scale, detect_faces):
     if detect_faces:
         logger.info("Detect Faces")
         f = faces()
-        
+
+    # Objects
+    if detect_objects:
+        logger.info("Detect Objects")
+        o = objects()
 
     last_update_time = time.time()
     wait_time = (1/fps)
@@ -294,7 +313,11 @@ def capture_cam(camera, fps, scale, detect_faces):
                 # Faces
                 if detect_faces:
                     frame = f.find(frame)
-                
+
+                # Objects
+                if detect_objects:
+                    frame = o.detect(frame)
+
                 # Scale frame
                 frame = scale_frame(frame, scale)
 
@@ -313,7 +336,7 @@ def capture_cam(camera, fps, scale, detect_faces):
     
             logger.error(str(e))
             time.sleep(2)
-            #sys.exit(1)
+
         
     return
 
@@ -404,6 +427,12 @@ if __name__ == "__main__":
             '--faces',  action="store_true",
             help='Detect faces')
 
+    # Object detection 
+
+    parser.add_argument(
+            '--objects',  action="store_true",
+            help='Detect objects')
+
     # Stream images settings 
 
     parser.add_argument(
@@ -487,10 +516,10 @@ if __name__ == "__main__":
     #
      
     if args.screen:
-        capture_screen(args.box, args.fps, args.scale, args.faces)
+        capture_screen(args.box, args.fps, args.scale, args.faces, args.objects)
     elif args.images:
         read_imagefiles(args.path, args.fps, args.scale)
     else:
-        capture_cam(args.camera, args.fps, args.scale, args.faces)
+        capture_cam(args.camera, args.fps, args.scale, args.faces, args.objects)
 
 
