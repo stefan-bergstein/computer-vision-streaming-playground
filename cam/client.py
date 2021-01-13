@@ -79,7 +79,7 @@ def connect_server(server):
 
 def send_msg(msg):
     if send_kafka:
-        producer.send(topic, json.dumps(msg))
+        producer.send(topic, msg)
     else:
         if is_connected:
             sio.emit('cam2server', msg, namespace='/cam' )
@@ -347,9 +347,8 @@ def connect_kafka(bootstrap_servers, security_protocol, ssl_check_hostname, ssl_
     logger.info(f"- ssl_check_hostname: {ssl_check_hostname}")
     logger.info(f"- ssl_cafile: {ssl_cafile}")
 
-
-    producer = KafkaProducer(value_serializer=msgpack.dumps,
-        bootstrap_servers=bootstrap_servers,
+    producer = KafkaProducer(bootstrap_servers=bootstrap_servers,
+        value_serializer=lambda m: json.dumps(m).encode('utf-8'),
         security_protocol=security_protocol,
         ssl_check_hostname=ssl_check_hostname,
         batch_size=0,

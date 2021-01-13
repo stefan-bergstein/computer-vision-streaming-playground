@@ -104,7 +104,6 @@ if __name__ == "__main__":
 
     try:
         consumer = KafkaConsumer(topic, 
-            value_deserializer=msgpack.unpackb,
             bootstrap_servers=[bootstrap_servers],
             security_protocol=security_protocol,
             ssl_check_hostname=ssl_check_hostname,
@@ -138,7 +137,7 @@ if __name__ == "__main__":
 
     print("Consume ...")
     for msg in consumer:
-        data = json.loads(msg.value)
+        data = json.loads(msg.value.decode("utf-8"))
 
         frame = convert_b64jpeg_to_image(data['image'].split(',')[1])
 
